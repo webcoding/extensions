@@ -11,10 +11,10 @@ function getAverageRGBFromZone(zone, opts) {
   var blockSize = opts.accuracy;
 
   while ((i += blockSize * 4) < len ) {
-    ++count;
-    rgb.r += zone.data[i];
-    rgb.g += zone.data[i+1];
-    rgb.b += zone.data[i+2];
+  ++count;
+  rgb.r += zone.data[i];
+  rgb.g += zone.data[i+1];
+  rgb.b += zone.data[i+2];
   }
 
   rgb.r = ~~(rgb.r/count);
@@ -37,7 +37,7 @@ function getAverageRGB(imgEl) {
   count = 0;
 
   if (!context) {
-    return defaultRGB;
+  return defaultRGB;
   }
 
   height = canvas.height = imgEl.naturalHeight || imgEl.offsetHeight || imgEl.height;
@@ -46,10 +46,10 @@ function getAverageRGB(imgEl) {
   context.drawImage(imgEl, 0, 0);
 
   try {
-    rgb = getAverageRGBFromZone(context.getImageData(0, 0, width, height), {accuracy: _ACCURACY});
+  rgb = getAverageRGBFromZone(context.getImageData(0, 0, width, height), {accuracy: _ACCURACY});
   } catch(e) {
-    console.log('image cannot be processed', e);
-    rgb = defaultRGB;
+  console.log('image cannot be processed', e);
+  rgb = defaultRGB;
   }
   return [rgb];
 }
@@ -57,13 +57,13 @@ function getAverageRGB(imgEl) {
 const _ACCURACY = 100 //more - faster
 
 const ColorThief = {
-	getColor(el) {
-		var rgb = getAverageRGB(el);
-		return [
-			rgb[0]["r"],
-			rgb[0]["g"],
-			rgb[0]["b"]
-		]
-	}
+  getColor(el) {
+    var rgb = getAverageRGB(el);
+    return [
+      rgb[0]["r"],
+      rgb[0]["g"],
+      rgb[0]["b"]
+    ]
+  }
 }
 export default ColorThief

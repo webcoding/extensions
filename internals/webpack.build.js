@@ -12,41 +12,41 @@ process.env.NODE_ENV = "production";
 
 //Plugins
 var plugins = commonConfig.plugins.concat([
-	new ExtractTextPlugin("[name].css", {filename: "[name].css", allChunks: true}),
-	new webpack.optimize.OccurrenceOrderPlugin(true),
-	new webpack.optimize.DedupePlugin(),
-	new webpack.optimize.UglifyJsPlugin({
-		minimize: true,
-		comments: false,
-		compress: {
-	        warnings: false
-	    }
-	}),
-	new OptimizeJsPlugin({
-        sourceMap: false
-    }),
-	new ZipPlugin({
-		path: '../',
-		filename: global.platform+".zip"
-	}),
-	new BundleAnalyzerPlugin({
-		analyzerMode: 'static',
-		openAnalyzer: false,
-		reportFilename: path.join(__dirname, '/../report.html'),
-		generateStatsFile: false,
-		logLevel: 'info'
-	})
+  new ExtractTextPlugin("[name].css", {filename: "[name].css", allChunks: true}),
+  new webpack.optimize.OccurrenceOrderPlugin(true),
+  new webpack.optimize.DedupePlugin(),
+  new webpack.optimize.UglifyJsPlugin({
+    minimize: true,
+    comments: false,
+    compress: {
+      warnings: false
+    }
+  }),
+  new OptimizeJsPlugin({
+    sourceMap: false
+  }),
+  new ZipPlugin({
+    path: '../',
+    filename: global.platform+".zip"
+  }),
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    openAnalyzer: false,
+    reportFilename: path.join(__dirname, '/../report.html'),
+    generateStatsFile: false,
+    logLevel: 'info'
+  })
 ])
 
 plugins.unshift(
-	new webpack.DefinePlugin({
-		__DEV__: JSON.stringify(false),
-		__PLATFORM__: JSON.stringify(global.platform),
-		__APPBUILD__: JSON.stringify(global.withAppBuild||false),
-		'process.env': {
-			'NODE_ENV': JSON.stringify('production')
-		}
-	})
+  new webpack.DefinePlugin({
+    __DEV__: JSON.stringify(false),
+    __PLATFORM__: JSON.stringify(global.platform),
+    __APPBUILD__: JSON.stringify(global.withAppBuild||false),
+    'process.env': {
+      'NODE_ENV': JSON.stringify('production')
+    }
+  })
 );
 
 //Loaders
@@ -55,10 +55,10 @@ loaders.img.loaders.push('image-webpack?{pngquant:{optimizationLevel: 7, quality
 loaders.stylus.loader = ExtractTextPlugin.extract("stylus", "css-loader!postcss-loader!stylus-loader");
 
 /*loaders.stylus.loader = ExtractTextPlugin.extract({
-	fallbackLoader: "style-loader",
-	loader: "css-loader!postcss-loader!stylus-loader"
+  fallbackLoader: "style-loader",
+  loader: "css-loader!postcss-loader!stylus-loader"
 });*/
 
 module.exports = require('./webpack.js')({
-	devtool: false
+  devtool: false
 }, plugins, loaders)

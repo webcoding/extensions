@@ -4,15 +4,15 @@ import actions from '../actions/dialog'
 var _state = {}
 
 export default createStore({
-	listenables: actions,
+  listenables: actions,
 
-	onShow(params) {
-		_state = params;
-		this.trigger(_state);
-	},
+  onShow(params) {
+    _state = params;
+    this.trigger(_state);
+  },
 
-	onClose() {
-		_state = {};
-		this.trigger(_state);
-	}
+  onClose() {
+    _state = {};
+    this.trigger(_state);
+  }
 })

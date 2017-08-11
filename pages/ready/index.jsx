@@ -6,13 +6,13 @@ require('./css/root.styl')
 
 var isRendered = false;
 const TryToRender = ()=>{
-	if (isRendered) return;
+  if (isRendered) return;
 
-	var elem = document.getElementById('app');
-	if (elem){
-		render(<Page />, elem);
-		isRendered=true;
-	}
+  var elem = document.getElementById('app');
+  if (elem){
+    render(<Page />, elem);
+    isRendered=true;
+  }
 }
 
 TryToRender();

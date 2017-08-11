@@ -6,72 +6,72 @@ import Icon from '../../co/common/icon'
 import bookmarkActions from '../../actions/bookmark'
 
 var _ = {
-	capitalize: require('lodash/capitalize')
+  capitalize: require('lodash/capitalize')
 }
 
 export default class Footer extends React.Component {
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
 
-		this.removeRestore = this.removeRestore.bind(this);
-		this.onToggleImportant = this.onToggleImportant.bind(this);
+    this.removeRestore = this.removeRestore.bind(this);
+    this.onToggleImportant = this.onToggleImportant.bind(this);
 
-		this.state = this.prepareState(props);
-	}
+    this.state = this.prepareState(props);
+  }
 
-	prepareState(props) {
-		return {
-			isRemoved: (props.collectionId == -99)
-		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-    	this.setState(this.prepareState(nextProps))
+  prepareState(props) {
+    return {
+      isRemoved: (props.collectionId == -99)
     }
+  }
 
-	removeRestore() {
-		if (this.state.isRemoved)
-			bookmarkActions.restore();
-		else
-			bookmarkActions.remove();
-	}
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.prepareState(nextProps))
+  }
 
-	onToggleImportant() {
-		this.props.onChange({important: !this.props.important});
-	}
+  removeRestore() {
+    if (this.state.isRemoved)
+      bookmarkActions.restore();
+    else
+      bookmarkActions.remove();
+  }
 
-	renderImportantButton() {
-		if (this.state.isRemoved)
-			return null;
-		
-		var favPrefix = t.s("add") +" " + t.s("to");
-        if (this.props.important)
-            favPrefix = t.s("remove")+" "+t.s("from");
+  onToggleImportant() {
+    this.props.onChange({important: !this.props.important});
+  }
 
-        return (
-        	<Button className="button link accent" tabIndex="1001" onClick={this.onToggleImportant} onKeyDown={(e)=>this.onEnter(e,()=>this.onToggleImportant())} title={favPrefix + " " + t.s("favoriteSites").toLowerCase()}>
-        		<Icon name={"like"+(this.props.important?"-active":"")} />
-        	</Button>
-       	); 
-	}
+  renderImportantButton() {
+    if (this.state.isRemoved)
+      return null;
+    
+    var favPrefix = t.s("add") +" " + t.s("to");
+    if (this.props.important)
+      favPrefix = t.s("remove")+" "+t.s("from");
 
-	render() {
-		return (
-			<section className="footer">
-				<Button className="button link accent" tabIndex="1000" onClick={this.removeRestore}>
-					{this.state.isRemoved ? t.s("restore") : <Icon name="remove" />}
-				</Button>
+    return (
+      <Button className="button link accent" tabIndex="1001" onClick={this.onToggleImportant} onKeyDown={(e)=>this.onEnter(e,()=>this.onToggleImportant())} title={favPrefix + " " + t.s("favoriteSites").toLowerCase()}>
+        <Icon name={"like"+(this.props.important?"-active":"")} />
+      </Button>
+       ); 
+  }
 
-				{this.renderImportantButton()}
+  render() {
+    return (
+      <section className="footer">
+        <Button className="button link accent" tabIndex="1000" onClick={this.removeRestore}>
+          {this.state.isRemoved ? t.s("restore") : <Icon name="remove" />}
+        </Button>
 
-				<div className="max"/>
+        {this.renderImportantButton()}
 
-				<Button href="https://raindrop.io" target="_blank" className="button link" tabIndex="1002">
-					{t.s("myAccount")}
-				</Button>
+        <div className="max"/>
 
-				<Button className="button gray accent"  tabIndex="1010" icon="config,normal" href="#/settings" />
-			</section>
-		);
-	}
+        <Button href="https://raindrop.io" target="_blank" className="button link" tabIndex="1002">
+          {t.s("myAccount")}
+        </Button>
+
+        <Button className="button gray accent"  tabIndex="1010" icon="config,normal" href="#/settings" />
+      </section>
+    );
+  }
 }

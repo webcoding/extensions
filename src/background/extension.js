@@ -15,118 +15,118 @@ else if (navigator.appVersion.indexOf("X11")!=-1) os = "unix";
 else if (navigator.appVersion.indexOf("Linux")!=-1) os = "linux";
 
 var getCurrentTab = (callback)=>{
-	new Promise((res)=>{
-			webextension.tabs.query({active: true, currentWindow: true}, (tabs=[])=>{
-				res(tabs[0])
-			});
-		})
-		.then((tab)=>{
-			callback(tab);
-		})
-		.catch((e)=>{
-			callback(false);
-		})
+  new Promise((res)=>{
+      webextension.tabs.query({active: true, currentWindow: true}, (tabs=[])=>{
+        res(tabs[0])
+      });
+    })
+    .then((tab)=>{
+      callback(tab);
+    })
+    .catch((e)=>{
+      callback(false);
+    })
 }
 
 var sendMessageToBackground = (obj,callback)=>{
-	if (typeof webextension.runtime != "undefined"){
-		webextension.runtime.sendMessage(obj, callback);
-	}
+  if (typeof webextension.runtime != "undefined"){
+    webextension.runtime.sendMessage(obj, callback);
+  }
 }
 
 const newTabRegex = [/^about\:(newtab|home)/i, /^chrome\:\/\/(newtab|startpage)/i/*, /^chrome-extension\:\/\//i*/];
 
 export default {
-	extension: webextension,
-	browserName: browserName,
-	osName: os,
-	getCurrentTab: getCurrentTab,
-	newTabRegex: newTabRegex,
-	sendMessageToBackground: sendMessageToBackground,
+  extension: webextension,
+  browserName: browserName,
+  osName: os,
+  getCurrentTab: getCurrentTab,
+  newTabRegex: newTabRegex,
+  sendMessageToBackground: sendMessageToBackground,
 
-	openTab(url) {
-		if (typeof webextension.tabs != "undefined")
-			webextension.tabs.create({url: url});
-	},
-	sendMessage(obj, callback) {
-		getCurrentTab((tab)=>{
-			if (!tab) return;
+  openTab(url) {
+    if (typeof webextension.tabs != "undefined")
+      webextension.tabs.create({url: url});
+  },
+  sendMessage(obj, callback) {
+    getCurrentTab((tab)=>{
+      if (!tab) return;
 
-			if (typeof webextension.tabs != "undefined")
-				webextension.tabs.sendMessage(tab.id, obj, callback);
-		});
-	},
-	
-	openModal(urlSuffix, pos="center") {
-		var w = 300, h = 600, gap = 30;
-		var left = 0;
-    	var top = 0;
+      if (typeof webextension.tabs != "undefined")
+        webextension.tabs.sendMessage(tab.id, obj, callback);
+    });
+  },
+  
+  openModal(urlSuffix, pos="center") {
+    var w = 300, h = 600, gap = 30;
+    var left = 0;
+    var top = 0;
 
-    	switch(pos) {
-    		case "center":
-    			left = (screen.width/2)-(w/2);
-    			top = (screen.height/2)-(h/2);
-    		break;
+    switch(pos) {
+      case "center":
+        left = (screen.width/2)-(w/2);
+        top = (screen.height/2)-(h/2);
+      break;
 
-    		case "top-right":
-    			left = screen.width - w - gap;
-    			top = gap;
-    		break;
+      case "top-right":
+        left = screen.width - w - gap;
+        top = gap;
+      break;
 
-    		case "bottom-right":
-    			left = screen.width - w - gap;
-    			top = screen.height - h - gap;
-    		break;
-    	}
+      case "bottom-right":
+        left = screen.width - w - gap;
+        top = screen.height - h - gap;
+      break;
+    }
 
-		webextension.windows.create({
-			url: webextension.extension.getURL('/index.html'+urlSuffix),
-			type: "popup",
-			width: w,
-			height: h,
-			left: parseInt(left),
-			top: parseInt(top),
-			//alwaysOnTop: true
-		})
-	},
+    webextension.windows.create({
+      url: webextension.extension.getURL('/index.html'+urlSuffix),
+      type: "popup",
+      width: w,
+      height: h,
+      left: parseInt(left),
+      top: parseInt(top),
+      //alwaysOnTop: true
+    })
+  },
 
-	isNewTabPage(url) {
-		var isNewTab = false;
-		newTabRegex.forEach((r)=>{
-			if (r.test(url||""))
-				isNewTab=true;
-		})
+  isNewTabPage(url) {
+    var isNewTab = false;
+    newTabRegex.forEach((r)=>{
+      if (r.test(url||""))
+        isNewTab=true;
+    })
 
-		return isNewTab;
-	},
+    return isNewTab;
+  },
 
-	updateTabAndGoToRaindrop() {
-		getCurrentTab((tab)=>{
-			if (!tab) return;
+  updateTabAndGoToRaindrop() {
+    getCurrentTab((tab)=>{
+      if (!tab) return;
 
-			webextension.browserAction.disable(tab.id);
-			webextension.tabs.update(tab.id, {url: "https://raindrop.io/app"})
-		});
-	},
+      webextension.browserAction.disable(tab.id);
+      webextension.tabs.update(tab.id, {url: "https://raindrop.io/app"})
+    });
+  },
 
-	getHotkeysSettingsPage() {
-		var link = null;
-		switch(browserName) {
-			case "chrome": link = "chrome://extensions/configureCommands"; break;
-			case "opera": link = "opera://settings/configureCommands"; break;
-		}
-		return link;
-	},
+  getHotkeysSettingsPage() {
+    var link = null;
+    switch(browserName) {
+      case "chrome": link = "chrome://extensions/configureCommands"; break;
+      case "opera": link = "opera://settings/configureCommands"; break;
+    }
+    return link;
+  },
 
 
-	//settings
-	getSetting(name) {
-		return new Promise((res)=>{
-			sendMessageToBackground({action: "getSetting", name: name}, res)
-		})
-	},
+  //settings
+  getSetting(name) {
+    return new Promise((res)=>{
+      sendMessageToBackground({action: "getSetting", name: name}, res)
+    })
+  },
 
-	setSetting(name, value) {
-		sendMessageToBackground({action: "setSetting", name: name, value: value}, ()=>{})
-	}
+  setSetting(name, value) {
+    sendMessageToBackground({action: "setSetting", name: name, value: value}, ()=>{})
+  }
 }

@@ -1,5 +1,5 @@
 var strings = {
-	'da_DK': require("lzstring!json!../languages/da_DK.json"),//lzstring!
+  'da_DK': require("lzstring!json!../languages/da_DK.json"),//lzstring!
   'de_DE': require("lzstring!json!../languages/de_DE.json"),
   'en_US': require("lzstring!json!../languages/en_US.json"),
   'es_ES': require("lzstring!json!../languages/es_ES.json"),
@@ -26,62 +26,62 @@ var translate = {
   currentLang: "",
 
   cleanLang: function(lang) {
-    for(var i in strings)
-      if (i.indexOf(lang)==0){
-        return i;
-      }
-    return this.defaultLang;
+  for(var i in strings)
+    if (i.indexOf(lang)==0){
+    return i;
+    }
+  return this.defaultLang;
   },
 
   initLang: function(lang) {
-      //get defautls if lang not presented
-      if (typeof lang == "undefined"){
-        lang = null;
-        try{lang = localStorage.getItem("language")||null;}catch(e){}
+    //get defautls if lang not presented
+    if (typeof lang == "undefined"){
+    lang = null;
+    try{lang = localStorage.getItem("language")||null;}catch(e){}
 
-        if (lang==null){
-          var browserLang = "";
-          if (typeof navigator != "undefined")
-          browserLang = (navigator||{}).language || (navigator||{}).userLanguage || "";
-          try{
-            browserLang = browserLang.trim().substr(0,2).toLowerCase();
-          } catch(e) {if (e) browserLang=""; }
+    if (lang==null){
+      var browserLang = "";
+      if (typeof navigator != "undefined")
+      browserLang = (navigator||{}).language || (navigator||{}).userLanguage || "";
+      try{
+      browserLang = browserLang.trim().substr(0,2).toLowerCase();
+      } catch(e) {if (e) browserLang=""; }
 
-          if (browserLang!=""){
-            lang = this.cleanLang(browserLang);
-          }
-        }
+      if (browserLang!=""){
+      lang = this.cleanLang(browserLang);
       }
+    }
+    }
 
-      if (typeof strings[lang] == "undefined")
-          lang = this.defaultLang;
+    if (typeof strings[lang] == "undefined")
+      lang = this.defaultLang;
 
-      this.currentLang = lang;
-      try{localStorage.setItem("language", this.currentLang);}catch(e){}
+    this.currentLang = lang;
+    try{localStorage.setItem("language", this.currentLang);}catch(e){}
   },
 
   s: function(key) {
-    if (typeof strings[this.currentLang] != "object")
-      strings[this.currentLang] = JSON.parse(strings[this.currentLang]);
+  if (typeof strings[this.currentLang] != "object")
+    strings[this.currentLang] = JSON.parse(strings[this.currentLang]);
 
-    if (typeof strings[this.defaultLang] != "object")
-      strings[this.defaultLang] = JSON.parse(strings[this.defaultLang]);
+  if (typeof strings[this.defaultLang] != "object")
+    strings[this.defaultLang] = JSON.parse(strings[this.defaultLang]);
 
-    if (strings[this.currentLang][key])
-      return strings[this.currentLang][key];
-    else if (strings[this.defaultLang][key])
-      return strings[this.defaultLang][key];
-    else
-      return key;
+  if (strings[this.currentLang][key])
+    return strings[this.currentLang][key];
+  else if (strings[this.defaultLang][key])
+    return strings[this.defaultLang][key];
+  else
+    return key;
   },
 
   format: function(key) {
-    var formatted = this.s(key);
-    for( var arg in arguments ) {
-      if (arg>0)
-        formatted = formatted.replace("{" + (arg-1) + "}", arguments[arg]);
-    }
-    return formatted;
+  var formatted = this.s(key);
+  for( var arg in arguments ) {
+    if (arg>0)
+    formatted = formatted.replace("{" + (arg-1) + "}", arguments[arg]);
+  }
+  return formatted;
   }
 };
 
